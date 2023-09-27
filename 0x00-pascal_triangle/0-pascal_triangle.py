@@ -13,8 +13,10 @@ def pascal_triangle(n):
             print(end="")
 
         """loop to get elements for row i"""
+        row = []
         for j in range(i+1):
             """nCr = n!/((n-r)!*r!)"""
-            print([factorial(i)//(factorial(j)*factorial(i-j))], end="")
+            row.append(factorial(i) // (factorial(j) * factorial(i - j)))
 
-        print()
+        print("[", end="")
+        print(*row, sep=', ', end=']\n')
