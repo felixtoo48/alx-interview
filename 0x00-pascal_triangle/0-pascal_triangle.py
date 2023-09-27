@@ -10,12 +10,11 @@ def pascal_triangle(n):
     for i in range(n):
         """loop to get leading spaces"""
         for j in range(n-i+1):
-            print(end=" ")
+            print(end="")
 
         """loop to get elements for row i"""
         for j in range(i+1):
             """nCr = n!/((n-r)!*r!)"""
-            print(factorial(i)//(factorial(j)*factorial(i-j)), end=" ")
+            print([factorial(i)//(factorial(j)*factorial(i-j))], end="")
 
-        """print each row in a new line"""
-        print("\n")
+        print()
