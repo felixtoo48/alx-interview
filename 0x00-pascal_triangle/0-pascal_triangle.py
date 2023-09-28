@@ -1,25 +1,16 @@
 #!/usr/bin/python3
 """
-pascal triangle defination file
+Print Pascal's Triangle
 """
-from math import factorial
 
 
 def pascal_triangle(n):
-    """ prints pascal's triangle with n rows"""
-    if n <= 0:
-        return []
-
-    """ initialize rezult list"""
-    result = []
-
-    for i in range(n):
-        """initialize row results"""
-        row = []
-
-        for j in range(i+1):
-            """nCr = n!/((n-r)!*r!)"""
-            row.append(factorial(i) // (factorial(j) * factorial(i - j)))
-        result.append(row)
-
-    return result
+    """returns Pascal's triangle in a list of list"""
+    my_list = []
+    if (n <= 0):
+        return my_list
+    my_list.append([1])
+    for i in range(n - 1):
+        my_list.append([1] + [my_list[i][a] + my_list[i][a + 1]
+                              for a in range(len(my_list[i]) - 1)] + [1])
+    return my_list
