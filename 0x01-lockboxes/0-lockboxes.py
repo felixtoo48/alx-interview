@@ -3,6 +3,7 @@
 locked boxes can be unlocked or not
 """
 
+
 def canUnlockAll(boxes):
     """
     Return: True of False
