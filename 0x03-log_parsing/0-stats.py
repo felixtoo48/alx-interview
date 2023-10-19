@@ -5,11 +5,22 @@ import re
 
 
 """Define the regular expression pattern to match the desired log format"""
-log_pattern = r'^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}) - \[([^\]]+)] "GET /projects/\d+ HTTP/1\.1" (\d+) (\d+)$'
+ip_pattern = r'^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
+log_date_pattern = r'\[([^\]]+)] "GET /projects/\d+ HTTP/1\.1" (\d+) (\d+)'
+log_pattern = ip_pattern + r' - ' + log_date_pattern
 
 """Initializing variables to keep track of statistics"""
 file_sizes = []
-status_code_counts = {200: 0, 301: 0, 400: 0, 401: 0, 403: 0, 404: 0, 405: 0, 500: 0}
+status_code_counts = {
+    200: 0,
+    301: 0,
+    400: 0,
+    401: 0,
+    403: 0,
+    404: 0,
+    405: 0,
+    500: 0
+}
 
 try:
     line_count = 0
@@ -43,7 +54,7 @@ try:
                         print(f'{code}: {count}')
 
 except KeyboardInterrupt:
-    print("Ctrl+C pressed. Exiting gracefully.")
+    print("")
 
 # Print the final statistics after processing all lines"""
 print(f'File size: {total_file_size}')
