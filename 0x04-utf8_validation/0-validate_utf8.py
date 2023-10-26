@@ -1,5 +1,19 @@
 #!/usr/bin/python3
 """ method determining if a given dataset confroms to UTF-8 encoding """
+from itertools import takewhile
+
+
+def to_bits(bytes):
+    """iterating through bits"""
+    NUMBER_OF_BITS_PER_BLOCK = 8
+
+    for byte in bytes:
+        num = []
+        exp = 1 << NUMBER_OF_BITS_PER_BLOCK
+        while exp:
+            exp >>= 1
+            num.append(bool(byte & exp))
+        yield num
 
 
 def validUTF8(data):
@@ -8,50 +22,26 @@ def validUTF8(data):
     :type data: List[int]
     :rtype: bool
     """
-    NUMBER_OF_BITS_PER_BLOCK = 8
     MAX_NUMBER_OF_ONES = 4
 
-    index = 0
-    while index < len(data):
-        number = data[index] & (2 ** 7)
-        number >>= (NUMBER_OF_BITS_PER_BLOCK - 1)
-        if number == 0:  # single byte char
-            index += 1
+    bits = to_bits(data)
+    for byte in bits:
+        # single byte char
+        if byte[0] == 0:
             continue
 
-        # validate multi-byte char
-        number_of_ones = 0
-        while True:  # get the number of significant ones
-            number = data[index] & (2 ** (7 - number_of_ones))
-            number >>= (NUMBER_OF_BITS_PER_BLOCK - number_of_ones - 1)
-            if number == 1:
-                number_of_ones += 1
-            else:
-                break
-
-            if number_of_ones > MAX_NUMBER_OF_ONES:
-                return False  # too much ones per char sequence
-
-        if number_of_ones == 1:
-            return False  # there has to be at least 2 ones
-
-        index += 1  # moveto check the next byte in a multi-byte char sequence
-
-        # check for out of bounds and exit early
-        if index >= len(data) or index >= (index + number_of_ones - 1):
+        # multi-byte character
+        amount = sum(takewhile(bool, byte))
+        if amount <= 1:
+            return False
+        if amount >= MAX_NUMBER_OF_ONES:
             return False
 
-        # every next byte has to start with "10"
-        for i in range(index, index + number_of_ones - 1):
-            number = data[i]
-
-            number >>= (NUMBER_OF_BITS_PER_BLOCK - 1)
-            if number != 1:
+        for _ in range(amount - 1):
+            try:
+                byte = next(bits)
+            except StopIteration:
                 return False
-            number >>= (NUMBER_OF_BITS_PER_BLOCK - 1)
-            if number != 0:
+            if byte[0:2] != [1, 0]:
                 return False
-
-            index += 1
-
     return True
