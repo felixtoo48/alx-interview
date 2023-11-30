@@ -17,10 +17,10 @@ def island_perimeter(grid):
             if grid[i][j] == 1:
                 perimeter += 4
 
-            # removing connecting edges horizontal or vertically
-            # if adjacent land is present
-            if i > 0 and grid[i - 1][j] == 1:
-                perimeter -= 2
-            if j > 0 and grid[i][j - 1] == 1:
-                perimeter -= 2
-        return perimeter
+                # Check for adjacent land cells and deduct shared edges
+                if i > 0 and grid[i - 1][j] == 1:
+                    perimeter -= 2
+                if j > 0 and grid[i][j - 1] == 1:
+                    perimeter -= 2
+
+    return perimeter
